@@ -58,7 +58,6 @@ class GoogleCalendarConfig {
     }
 
     fun createSampleEvent() {
-        // Definir el nuevo evento
         val event = Event()
         event.summary = "Evento de Ejemplo"
         event.location = "800 Howard St., San Francisco, CA 94103"
