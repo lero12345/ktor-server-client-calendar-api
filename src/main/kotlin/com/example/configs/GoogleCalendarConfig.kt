@@ -16,6 +16,7 @@ import com.google.api.services.calendar.model.Event
 import com.google.api.services.calendar.model.EventDateTime
 import com.google.api.services.calendar.model.Events
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.InputStreamReader
 
 class GoogleCalendarConfig {
@@ -28,10 +29,11 @@ class GoogleCalendarConfig {
         jsonFactory: GsonFactory,
         transport: NetHttpTransport
     ): Credential {
-        val credentialsFile = File(configuration.credentialsPath)
         val tokensPath = File(configuration.tokensPath)
-        val clientSecrets =
-            GoogleClientSecrets.load(jsonFactory, InputStreamReader(credentialsFile.inputStream()))
+        val clientSecrets = GoogleClientSecrets.load(jsonFactory, InputStreamReader(
+            this::class.java.classLoader.getResourceAsStream("credentials.json")
+                ?: throw FileNotFoundException("Resource not found: credentials.json")
+        ))
         val scopes = listOf(CalendarScopes.CALENDAR)
         val flow =
             GoogleAuthorizationCodeFlow.Builder(transport, jsonFactory, clientSecrets, scopes)
