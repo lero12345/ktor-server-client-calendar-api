@@ -1,7 +1,7 @@
 package com.example.configs
 
-import java.io.File
-import java.util.*
+import java.io.FileNotFoundException
+import java.util.Properties
 
 data class Configuration(
     val credentialsPath: String = "credentials.json",
@@ -25,10 +25,10 @@ data class Configuration(
 
 fun configuration(): Configuration {
     val properties = Properties()
-    properties.load(
-        File(
-            System.getProperty("configuration.properties") ?: "configuration.properties"
-        ).inputStream()
-    )
+    val inputStream =
+        Configuration::class.java.classLoader.getResourceAsStream("configuration.properties")
+            ?: throw FileNotFoundException("property file 'configuration.properties' not found in the classpath")
+
+    properties.load(inputStream)
     return Configuration(properties)
 }
