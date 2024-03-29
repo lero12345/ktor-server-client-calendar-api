@@ -31,7 +31,7 @@ class GoogleCalendarConfig {
     ): Credential {
         val tokensPath = File(configuration.tokensPath)
         val clientSecrets = GoogleClientSecrets.load(jsonFactory, InputStreamReader(
-            this::class.java.classLoader.getResourceAsStream("credentials.json")
+            this::class.java.classLoader.getResourceAsStream(Companion.CREDENTIALS_RESOURCE)
                 ?: throw FileNotFoundException("Resource not found: credentials.json")
         ))
         val scopes = listOf(CalendarScopes.CALENDAR)
@@ -82,6 +82,10 @@ class GoogleCalendarConfig {
 
         // Imprimir detalles del evento creado
         println("Evento creado: ${createdEvent.htmlLink}")
+    }
+
+    companion object {
+        const val CREDENTIALS_RESOURCE = "credentials.json"
     }
 
 }
