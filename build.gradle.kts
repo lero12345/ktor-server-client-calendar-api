@@ -59,13 +59,13 @@ java {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    sourceCompatibility = "19"
-    targetCompatibility = "19"
+    sourceCompatibility = "11"
+    targetCompatibility = "11"
 }
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "11"
     }
 }
 
