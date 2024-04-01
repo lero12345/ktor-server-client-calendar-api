@@ -18,7 +18,7 @@ import kotlinx.serialization.json.Json
 val scope = CoroutineScope(Dispatchers.IO)
 
 
-suspend fun fetchMultipleApisTest(data: WebhookData, calendarService: GoogleCalendarConfig) {
+suspend fun fetchMultipleApisTest(data: WebhookData, calendarService: GoogleCalendarConfig?) {
 
     val baseUrl = "https://api.bsale.io/v1"
     val accessToken = "75d1e177d764778a0adc6576022dea48675f7e68"
@@ -47,7 +47,7 @@ suspend fun fetchMultipleApisTest(data: WebhookData, calendarService: GoogleCale
             //...
             )
 
-        calendarService.createSampleEvent()
+        calendarService?.createSampleEvent()
     }
 }
 

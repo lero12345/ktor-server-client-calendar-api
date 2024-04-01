@@ -40,6 +40,7 @@ class GoogleCalendarConfig {
                 .setDataStoreFactory(
                     FileDataStoreFactory(tokensPath)
                 ).setAccessType("offline").build()
+        flow.newAuthorizationUrl().setRedirectUri("https://ktor-server-client-calendar-api.onrender.com")
         val receiver = LocalServerReceiver.Builder().setPort(8080).build()
         return AuthorizationCodeInstalledApp(flow, receiver).authorize("user")
     }
