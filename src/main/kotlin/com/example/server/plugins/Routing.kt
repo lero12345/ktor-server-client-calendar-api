@@ -30,7 +30,7 @@ fun Application.configureRouting() {
 //    calendarConfig.initializeCalendarService(configuration())
 
     val localServer = "http://localhost:8080/"
-    val remoteServer = "https://ktor-server-client-calendar-api.onrender.com:8080/"
+    val remoteServer = "https://ktor-server-client-calendar-api.onrender.com/"
 
     routing {
         get("/") {
