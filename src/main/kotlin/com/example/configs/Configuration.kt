@@ -17,7 +17,7 @@ data class Configuration(
         fileTags = properties["fileTags"].toString(),
         category = properties["category"].toString(),
         email = properties["email"].toString(),
-        credentialsPath = properties["credentialsPath"].toString(),
+//        credentialsPath = properties["credentialsPath"].toString(),
         tokensPath = properties["tokensPath"].toString(),
         calendarId = properties["calendarId"].toString()
     )

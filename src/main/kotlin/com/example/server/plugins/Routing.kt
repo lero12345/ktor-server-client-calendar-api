@@ -32,6 +32,9 @@ fun Application.configureRouting() {
     val localServer = "http://localhost:8080/"
     val remoteServer = "https://ktor-server-client-calendar-api.onrender.com/"
 
+    val clientIdOAuth = System.getenv("CLIENT_ID_OAUTH")
+    val clientSecretOAuth = System.getenv("CLIENT_SECRET_OAUTH")
+
     routing {
         get("/") {
             call.respondText("Hello mathias Worlddd!")
@@ -46,8 +49,8 @@ fun Application.configureRouting() {
         }
         get("/auth") {
             val url = GoogleAuthorizationCodeRequestUrl(
-                "1016868434732-871madp3npoe6m394bfnfmj8dnslo0hq.apps.googleusercontent.com",
-                "${remoteServer}oauth2callback", // Asegúrate de cambiar esto por tu dominio real y endpoint en producción
+                clientIdOAuth,
+                "${remoteServer}oauth2callback",
                 setOf(CalendarScopes.CALENDAR)
             ).build()
             call.respondRedirect(url)
@@ -56,9 +59,10 @@ fun Application.configureRouting() {
         get("/oauth2callback") {
             val code = call.request.queryParameters["code"]
             if (code != null) {
+
                 val flow = GoogleAuthorizationCodeFlow.Builder(
                     NetHttpTransport(), GsonFactory.getDefaultInstance(),
-                    "1016868434732-871madp3npoe6m394bfnfmj8dnslo0hq.apps.googleusercontent.com", "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",
+                    clientIdOAuth, clientSecretOAuth,
                     setOf(CalendarScopes.CALENDAR)
                 ).setAccessType("offline").build()
 
@@ -72,7 +76,6 @@ fun Application.configureRouting() {
                 calendarConfig.initializeCalendarServiceByToken(tokenResponse.accessToken)
                 calendarConfig.createSampleEvent()
                 call.respondText("Autenticación exitosa y eevento")
-                // Aquí deberías guardar el tokenResponse en algún lugar seguro y asociarlo con tu usuario
 
             } else {
                 call.respond(HttpStatusCode.BadRequest, "No se encontró el código de autorización")

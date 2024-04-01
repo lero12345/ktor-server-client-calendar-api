@@ -29,41 +29,41 @@ class GoogleCalendarConfig {
     lateinit var calendarService: Calendar
     private lateinit var calendarId: String
 
-    private fun fetchCredentials(
-        configuration: Configuration,
-        jsonFactory: GsonFactory,
-        transport: NetHttpTransport
-    ): Credential {
-        val tokensPath = File(configuration.tokensPath)
-        val clientSecrets = GoogleClientSecrets.load(jsonFactory, InputStreamReader(
-            this::class.java.classLoader.getResourceAsStream(Companion.CREDENTIALS_RESOURCE)
-                ?: throw FileNotFoundException("Resource not found: credentials.json")
-        ))
-        val scopes = listOf(CalendarScopes.CALENDAR)
-        val flow =
-            GoogleAuthorizationCodeFlow.Builder(transport, jsonFactory, clientSecrets, scopes)
-                .setDataStoreFactory(
-                    FileDataStoreFactory(tokensPath)
-                ).setAccessType("offline").build()
-        flow.newAuthorizationUrl().setRedirectUri("https://ktor-server-client-calendar-api.onrender.com")
-        val receiver = LocalServerReceiver.Builder().setPort(8080).build()
-        return AuthorizationCodeInstalledApp(flow, receiver).authorize("user")
-    }
+//    private fun fetchCredentials(
+//        configuration: Configuration,
+//        jsonFactory: GsonFactory,
+//        transport: NetHttpTransport
+//    ): Credential {
+//        val tokensPath = File(configuration.tokensPath)
+//        val clientSecrets = GoogleClientSecrets.load(jsonFactory, InputStreamReader(
+//            this::class.java.classLoader.getResourceAsStream(Companion.CREDENTIALS_RESOURCE)
+//                ?: throw FileNotFoundException("Resource not found: credentials.json")
+//        ))
+//        val scopes = listOf(CalendarScopes.CALENDAR)
+//        val flow =
+//            GoogleAuthorizationCodeFlow.Builder(transport, jsonFactory, clientSecrets, scopes)
+//                .setDataStoreFactory(
+//                    FileDataStoreFactory(tokensPath)
+//                ).setAccessType("offline").build()
+//        flow.newAuthorizationUrl().setRedirectUri("https://ktor-server-client-calendar-api.onrender.com")
+//        val receiver = LocalServerReceiver.Builder().setPort(8080).build()
+//        return AuthorizationCodeInstalledApp(flow, receiver).authorize("user")
+//    }
 
-    fun initializeCalendarService(configuration: Configuration) {
-        val jsonFactory = GsonFactory.getDefaultInstance()
-        val transport = GoogleNetHttpTransport.newTrustedTransport()
-        val credentials = fetchCredentials(configuration, jsonFactory, transport)
-        calendarId = configuration.calendarId
-        calendarService = Calendar.Builder(transport, jsonFactory, credentials)
-            .setApplicationName("calendar reader").build()
-    }
+//    fun initializeCalendarService(configuration: Configuration) {
+//        val jsonFactory = GsonFactory.getDefaultInstance()
+//        val transport = GoogleNetHttpTransport.newTrustedTransport()
+//        val credentials = fetchCredentials(configuration, jsonFactory, transport)
+//        calendarId = configuration.calendarId
+//        calendarService = Calendar.Builder(transport, jsonFactory, credentials)
+//            .setApplicationName("calendar reader").build()
+//    }
 
-    fun fetchEvents(): Events {
-        val now = DateTime(System.currentTimeMillis())
-        return calendarService.events().list(calendarId).setMaxResults(100).setTimeMin(now)
-            .setOrderBy("startTime").setSingleEvents(true).execute()
-    }
+//    fun fetchEvents(): Events {
+//        val now = DateTime(System.currentTimeMillis())
+//        return calendarService.events().list(calendarId).setMaxResults(100).setTimeMin(now)
+//            .setOrderBy("startTime").setSingleEvents(true).execute()
+//    }
 
     fun createSampleEvent() {
         val event = Event()
