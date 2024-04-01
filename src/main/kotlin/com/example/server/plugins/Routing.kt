@@ -65,8 +65,15 @@ fun Application.configureRouting() {
                 val tokenResponse: GoogleTokenResponse = flow.newTokenRequest(code)
                     .setRedirectUri("${remoteServer}oauth2callback").execute()
 
+
+                val calendarConfig = GoogleCalendarConfig()
+
+
+                calendarConfig.initializeCalendarServiceByToken(tokenResponse.accessToken)
+                calendarConfig.createSampleEvent()
+                call.respondText("Autenticación exitosa y eevento")
                 // Aquí deberías guardar el tokenResponse en algún lugar seguro y asociarlo con tu usuario
-                call.respondText("Autenticación exitosa")
+
             } else {
                 call.respond(HttpStatusCode.BadRequest, "No se encontró el código de autorización")
             }

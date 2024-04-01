@@ -90,4 +90,5 @@ dependencies {
     implementation("com.google.api-client:google-api-client-android:1.23.0") {
         exclude(group = "org.apache.httpcomponents")
     }
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 }
