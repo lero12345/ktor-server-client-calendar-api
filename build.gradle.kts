@@ -69,6 +69,11 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+tasks.withType<JavaExec> {
+    val envProp = project.findProperty("env")?.toString() ?: "develop"
+    jvmArgs = listOf("-DENV=$envProp")
+}
+
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")

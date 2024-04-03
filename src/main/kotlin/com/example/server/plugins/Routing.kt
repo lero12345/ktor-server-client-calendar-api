@@ -1,5 +1,8 @@
 package com.example.server.plugins
 
+import com.example.AppEnvConfig.clientIdOAuth
+import com.example.AppEnvConfig.clientSecretOAuth
+import com.example.AppEnvConfig.deployServerUrl
 import com.example.client.fetchMultipleApisTest
 import com.example.configs.GoogleCalendarConfig
 import com.example.configs.configuration
@@ -26,15 +29,6 @@ import kotlinx.serialization.json.Json
 
 fun Application.configureRouting() {
 
-//    val calendarConfig = GoogleCalendarConfig()
-//    calendarConfig.initializeCalendarService(configuration())
-
-    val localServer = "http://localhost:8080/"
-    val remoteServer = "https://ktor-server-client-calendar-api.onrender.com/"
-
-    val clientIdOAuth = System.getenv("CLIENT_ID_OAUTH")
-    val clientSecretOAuth = System.getenv("CLIENT_SECRET_OAUTH")
-
     routing {
         get("/") {
             call.respondText("Hello mathias Worlddd!")
@@ -50,7 +44,7 @@ fun Application.configureRouting() {
         get("/auth") {
             val url = GoogleAuthorizationCodeRequestUrl(
                 clientIdOAuth,
-                "${remoteServer}oauth2callback",
+                "${deployServerUrl}oauth2callback",
                 setOf(CalendarScopes.CALENDAR)
             ).build()
             call.respondRedirect(url)
@@ -67,7 +61,7 @@ fun Application.configureRouting() {
                 ).setAccessType("offline").build()
 
                 val tokenResponse: GoogleTokenResponse = flow.newTokenRequest(code)
-                    .setRedirectUri("${remoteServer}oauth2callback").execute()
+                    .setRedirectUri("${deployServerUrl}oauth2callback").execute()
 
 
                 val calendarConfig = GoogleCalendarConfig()
