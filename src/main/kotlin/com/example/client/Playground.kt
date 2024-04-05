@@ -46,11 +46,13 @@ suspend fun fetchMultipleApisTest(data: WebhookData, calendarService: GoogleCale
         val calendarUiData = CalendarUiData(
             clientName = "${clientResponse.await().firstName} ${clientResponse.await().lastName}",
             address = documentResponse.await().address,
+            district = documentResponse.await().district,
             addressReference = clientAttributesResponse.await().items.firstOrNull { it.name == "Referencia" }?.value ?: "",
             serviceItems = formatItemList(itemsInDocumentUI),
-            email = clientResponse.await().email,
             phoneNumber = clientResponse.await().phone,
-            totalAmount = documentResponse.await().totalAmount.toString()
+            email = clientResponse.await().email,
+            totalAmount = documentResponse.await().totalAmount.toString(),
+            emissionDate = documentResponse.await().emissionDate
         )
 
         println(calendarUiData)
