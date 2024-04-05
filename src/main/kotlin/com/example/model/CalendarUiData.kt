@@ -3,7 +3,8 @@ package com.example.model
 data class CalendarUiData(
     val clientName: String = "",
     val address: String = "",
-    val serviceDetails: String = "",
+    val addressReference: String = "",
+    val serviceItems: String = "",
     val phoneNumber: String = "",
     val email: String = "",
     val totalAmount: String = "",

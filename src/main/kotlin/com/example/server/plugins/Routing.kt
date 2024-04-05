@@ -27,11 +27,15 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 
+private const val OAUTH_2_CALLBACK = "oauth2callback"
+
 fun Application.configureRouting() {
+
+    val calendarConfig = GoogleCalendarConfig()
 
     routing {
         get("/") {
-            call.respondText("Hello mathias Worlddd!")
+            call.respondRedirect("/auth", permanent = false)
         }
 
         post("/webhook") {
@@ -39,18 +43,18 @@ fun Application.configureRouting() {
             println("Webhook recibido: $body")
             val webhookData = Json.decodeFromString<WebhookData>(body)
             call.respond(HttpStatusCode.OK)
-            runBlocking { fetchMultipleApisTest(webhookData, null) }
+            runBlocking { fetchMultipleApisTest(webhookData, calendarConfig) }
         }
         get("/auth") {
             val url = GoogleAuthorizationCodeRequestUrl(
                 clientIdOAuth,
-                "${deployServerUrl}oauth2callback",
+                "${deployServerUrl}$OAUTH_2_CALLBACK",
                 setOf(CalendarScopes.CALENDAR)
             ).build()
             call.respondRedirect(url)
         }
 
-        get("/oauth2callback") {
+        get("/$OAUTH_2_CALLBACK") {
             val code = call.request.queryParameters["code"]
             if (code != null) {
 
@@ -61,15 +65,11 @@ fun Application.configureRouting() {
                 ).setAccessType("offline").build()
 
                 val tokenResponse: GoogleTokenResponse = flow.newTokenRequest(code)
-                    .setRedirectUri("${deployServerUrl}oauth2callback").execute()
-
-
-                val calendarConfig = GoogleCalendarConfig()
-
+                    .setRedirectUri("${deployServerUrl}$OAUTH_2_CALLBACK").execute()
 
                 calendarConfig.initializeCalendarServiceByToken(tokenResponse.accessToken)
-                calendarConfig.createSampleEvent()
-                call.respondText("Autenticación exitosa y eevento")
+
+                call.respondText("Authenticated")
 
             } else {
                 call.respond(HttpStatusCode.BadRequest, "No se encontró el código de autorización")

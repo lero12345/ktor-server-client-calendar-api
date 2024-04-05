@@ -18,21 +18,20 @@ object AppEnvConfig {
     private val environment: String = System.getenv("ENV") ?: "develop"
     val deployServerUrl: String
     val bsaleApiUrl: String
+    val bsaleAccessToken: String
     val clientIdOAuth: String
     val clientSecretOAuth: String
-    val host: String
 
     init {
         if (environment == "release") {
             deployServerUrl = System.getenv("RELEASE_DEPLOY_SERVER_URL")
             bsaleApiUrl = System.getenv("RELEASE_BSALE_API_URL")
-            host = deployServerUrl
         } else {
             deployServerUrl = "http://localhost:8080/"
             bsaleApiUrl = "https://api.bsale.io/v1"
-            host = "0.0.0.0"
         }
 
+        bsaleAccessToken = System.getenv("BSALE_TOKEN")
         clientIdOAuth = System.getenv("CLIENT_ID_OAUTH")
         clientSecretOAuth = System.getenv("CLIENT_SECRET_OAUTH")
     }
