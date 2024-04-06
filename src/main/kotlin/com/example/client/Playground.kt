@@ -52,7 +52,8 @@ suspend fun fetchMultipleApisTest(data: WebhookData, calendarService: GoogleCale
             phoneNumber = clientResponse.await().phone,
             email = clientResponse.await().email,
             totalAmount = documentResponse.await().totalAmount.toString(),
-            emissionDate = documentResponse.await().emissionDate
+            emissionDate = documentResponse.await().emissionDate,
+            documentId = data.resourceId
         )
 
         println(calendarUiData)

@@ -1,5 +1,6 @@
 package com.example.configs
 
+import com.example.database.DatabaseOperations
 import com.example.model.CalendarUiData
 import com.example.model.getEventDescription
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -46,22 +47,21 @@ class GoogleCalendarConfig(val calendarId: String? = null) {
         println("Evento creado: ${createdEvent.htmlLink}")
     }
 
-    fun createCustomEvent(calendarData: CalendarUiData) {
+    suspend fun createCustomEvent(calendarData: CalendarUiData) {
         val event = Event()
         event.summary = "${calendarData.clientName} - ${calendarData.district}"
         event.description = calendarData.getEventDescription()
 
-        // Convertir el tiempo Unix a LocalDateTime
-        val eventDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(calendarData.emissionDate), ZoneId.systemDefault())
+        // Convertir el tiempo Unix a LocalDateTime en la zona horaria de Perú
+        val eventDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(calendarData.emissionDate), ZoneId.of("America/Lima"))
 
         val startDateTime = eventDate.withHour(3).withMinute(0)
         val endDateTime = eventDate.withHour(5).withMinute(0)
 
-        // Formatear las fechas al formato RFC3339
+        // Formatear las fechas al formato RFC3339 sin convertirlas a UTC
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
-        val startDateTimeStr = startDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).format(formatter)
-        val endDateTimeStr = endDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(
-            ZoneOffset.UTC).format(formatter)
+        val startDateTimeStr = startDateTime.atZone(ZoneId.of("America/Lima")).format(formatter)
+        val endDateTimeStr = endDateTime.atZone(ZoneId.of("America/Lima")).format(formatter)
 
         val start = EventDateTime().setDateTime(DateTime(startDateTimeStr))
         event.start = start
@@ -69,7 +69,13 @@ class GoogleCalendarConfig(val calendarId: String? = null) {
         val end = EventDateTime().setDateTime(DateTime(endDateTimeStr))
         event.end = end
 
+        // Insertar el evento en el calendario
         val createdEvent = calendarService.events().insert("primary", event).execute()
+
+        DatabaseOperations().addEvent(calendarEventId = createdEvent.id, documentId = calendarData.documentId)
+        println("Evento y documento asociado guardado en table")
+        DatabaseOperations().getAllEvents()
+
         println("Evento creado: ${createdEvent.htmlLink}")
     }
 

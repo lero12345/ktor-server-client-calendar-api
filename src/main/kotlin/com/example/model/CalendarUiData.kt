@@ -11,7 +11,8 @@ data class CalendarUiData(
     val totalAmount: String = "",
     val clientOrigin: String = "",
     val emissionDate: Long = 0L,
-    val eventStatus: EventStatus = EventStatus.PENDING
+    val eventStatus: EventStatus = EventStatus.PENDING,
+    val documentId: String = ""
 )
 
 enum class EventStatus { PENDING, DONE }

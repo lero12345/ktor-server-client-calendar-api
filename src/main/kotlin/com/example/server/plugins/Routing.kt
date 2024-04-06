@@ -68,7 +68,6 @@ fun Application.configureRouting() {
                     .setRedirectUri("${deployServerUrl}$OAUTH_2_CALLBACK").execute()
 
                 calendarConfig.initializeCalendarServiceByToken(tokenResponse.accessToken)
-
                 call.respondText("Authenticated")
 
             } else {
