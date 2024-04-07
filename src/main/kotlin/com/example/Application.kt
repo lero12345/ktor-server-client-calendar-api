@@ -24,6 +24,9 @@ object AppEnvConfig {
     val bsaleAccessToken: String
     val clientIdOAuth: String
     val clientSecretOAuth: String
+    val dbHostAndName: String
+    val dbUserName: String
+    val dbPassWord: String
 
     init {
         if (environment == "release") {
@@ -37,5 +40,8 @@ object AppEnvConfig {
         bsaleAccessToken = System.getenv("BSALE_TOKEN")
         clientIdOAuth = System.getenv("CLIENT_ID_OAUTH")
         clientSecretOAuth = System.getenv("CLIENT_SECRET_OAUTH")
+        dbHostAndName = System.getenv("DB_HOST_NAME")
+        dbUserName = System.getenv("DB_USERNAME")
+        dbPassWord = System.getenv("DB_PASSWORD")
     }
 }

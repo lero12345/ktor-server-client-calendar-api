@@ -104,4 +104,5 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     // Driver JDBC para la base de datos específica, por ejemplo, H2
     implementation("com.h2database:h2:$h2_version")
+    implementation("org.postgresql:postgresql:42.6.1")
 }
